@@ -10,18 +10,12 @@ using namespace sam;
 
 int main() try
 {
-	using vst = vector::size_type;
-
 	{ BLOCK("ctor v, vv(4)")
 		vector v;
-		cout << "v.szie: " << v.size() << endl;
-		cout << "v.capacity: " << v.capacity() << endl;
+		DUMP_SZ_CAP(v);
 
 		vector vv(4);
-		cout << "vv.szie: " << vv.size() << endl;
-		cout << "vv.capacity: " << vv.capacity() << endl;
-
-		for (vst i = 0; i < vv.size(); ++i) cout << vv[i] << '\n';
+		DUMP(vv);
 	}
 
 	{ BLOCK("subscript v(4)")
@@ -35,23 +29,22 @@ int main() try
 
 	{ BLOCK("reserve v, vv(4)")
 		vector v, vv(4);
-		auto dump = [&v, &vv]() {
-			cout << "v.: " << v.size() << ", " << v.capacity() << endl;
-			cout << "vv: " << vv.size() << ", " << vv.capacity() << endl;
-		};
-		dump();
+		DUMP_SZ_CAP(v)
+		DUMP_SZ_CAP(vv)
 
 		cout << "\n----- 0, 2\n\n";
 
 		v.reserve(0);
 		vv.reserve(2);
-		dump();
+		DUMP_SZ_CAP(v)
+		DUMP_SZ_CAP(vv)
 
 		cout << "\n----- 4, 6\n\n";
 
 		v.reserve(4);
 		vv.reserve(6);
-		dump();
+		DUMP_SZ_CAP(v)
+		DUMP_SZ_CAP(vv)
 	}
 }
 catch (const bad_alloc& x) {
