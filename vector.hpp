@@ -66,6 +66,7 @@ public:
 	size_type capacity() const { return cap_; }
 
 	void reserve(size_type sz);
+	void resize(size_type sz);
 
 private:
 	size_type	sz_;
@@ -125,6 +126,21 @@ void vector::reserve(size_type cap)
 	cap_ = cap;
 }
 
+///
+
+//
+// cases:
+// sz < sz_
+// sz = sz_
+// sz_ < sz <= cap_
+// cap_ < sz
+//
+void vector::resize(size_type sz)
+{
+	reserve(sz);
+	for (size_type i = sz_; i < sz; ++i) elem_[i] = double{};
+	sz_ = sz;
+}
 
 } // namespace sam
 

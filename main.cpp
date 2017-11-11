@@ -46,6 +46,26 @@ int main() try
 		DUMP_SZ_CAP(v)
 		DUMP_SZ_CAP(vv)
 	}
+
+	{ BLOCK("resize v, vv(4)")
+		vector v, vv(4);
+		DUMP(v)
+		DUMP(vv)
+
+		cout << "\n----- 0, 2\n\n";
+
+		v.resize(0);			// case: sz == sz_
+		vv.resize(2);			// case: sz < sz_
+		DUMP(v)
+		DUMP(vv)
+
+		cout << "\n----- 4, 8\n\n";
+
+		v.resize(4);
+		vv.resize(8);
+		DUMP(v)
+		DUMP(vv)
+	}
 }
 catch (const bad_alloc& x) {
 	cerr << "error: " << x.what() << '\n';
