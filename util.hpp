@@ -12,8 +12,11 @@ struct block {
 	~block() { std::cout << "\n<<< ------\n\n"; }
 };
 
+#define BLOCK_NAME_HELPER(name, num) name ## num
+#define BLOCK_NAME(num) BLOCK_NAME_HELPER(block_, num)
+
 #define BLOCK(s) \
-	sam::block b_ ## _LINE_ {"--- " s " --->>>\n"};
+	sam::block BLOCK_NAME(__LINE__) {"--- " s " --->>>\n"};
 
 
 } // namespace sam
