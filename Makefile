@@ -1,5 +1,5 @@
 
-SOURCE		=	vector.hpp main.cpp
+SOURCE		=	vector.hpp util.hpp main.cpp
 EXE		=	a.out
 
 
