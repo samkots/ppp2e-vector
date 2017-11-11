@@ -32,6 +32,27 @@ int main() try
 		//cout << "v[4]: " << v[4] << endl;
 		//cout << "v.at(4): " << v.at(4) << endl;
 	}
+
+	{ BLOCK("reserve v, vv(4)")
+		vector v, vv(4);
+		auto dump = [&v, &vv]() {
+			cout << "v.: " << v.size() << ", " << v.capacity() << endl;
+			cout << "vv: " << vv.size() << ", " << vv.capacity() << endl;
+		};
+		dump();
+
+		cout << "\n----- 0, 2\n\n";
+
+		v.reserve(0);
+		vv.reserve(2);
+		dump();
+
+		cout << "\n----- 4, 6\n\n";
+
+		v.reserve(4);
+		vv.reserve(6);
+		dump();
+	}
 }
 catch (const bad_alloc& x) {
 	cerr << "error: " << x.what() << '\n';

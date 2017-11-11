@@ -65,6 +65,8 @@ public:
 	size_type size() const { return sz_; }
 	size_type capacity() const { return cap_; }
 
+	void reserve(size_type sz);
+
 private:
 	size_type	sz_;
 	size_type	cap_;
@@ -108,6 +110,21 @@ vector& vector::operator = (vector&& o) {
 
 	return *this;
 }
+
+///
+
+void vector::reserve(size_type cap)
+{
+	if (cap <= cap_) return;
+
+	double* p = new double[cap];
+	for (size_type i = 0; i < sz_; ++i) p[i] = elem_[i];
+	delete[] elem_;
+
+	elem_ = p;
+	cap_ = cap;
+}
+
 
 } // namespace sam
 
