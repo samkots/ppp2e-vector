@@ -61,7 +61,7 @@ int main() try
 
 		cout << "\n----- 4, 8\n\n";
 
-		v.resize(4);
+		v.resize(4);			// case: sz > sz_
 		vv.resize(8);
 		DUMP(v)
 		DUMP(vv)
