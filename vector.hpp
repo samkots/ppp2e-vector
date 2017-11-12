@@ -105,6 +105,8 @@ vector& vector::operator = (const vector& o)
 vector& vector::operator = (vector&& o) {
 	sz_ = o.sz_;
 	cap_ = o.cap_;
+
+	delete[] elem_;
 	elem_ = o.elem_;
 
 	o.sz_ = o.cap_ = 0;
