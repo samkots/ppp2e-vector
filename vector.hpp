@@ -67,6 +67,7 @@ public:
 
 	void reserve(size_type sz);
 	void resize(size_type sz);
+	void push_back(double val);
 
 private:
 	size_type	sz_;
@@ -140,6 +141,18 @@ void vector::resize(size_type sz)
 	reserve(sz);
 	for (size_type i = sz_; i < sz; ++i) elem_[i] = double{};
 	sz_ = sz;
+}
+
+///
+
+void vector::push_back(double value)
+{
+	if (cap_ == 0)
+		reserve(8);			// start with 8 "slots"
+	else if (sz_ == cap_)
+		reserve(sz_ * 2);
+
+	elem_[sz_++] = value;
 }
 
 } // namespace sam

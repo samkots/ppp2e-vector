@@ -47,7 +47,7 @@ int main() try
 		DUMP_SZ_CAP(vv)
 	}
 
-	{ BLOCK("resize v, vv(4)")
+	{ BLOCK("resize() v, vv(4)")
 		vector v, vv(4);
 		DUMP(v)
 		DUMP(vv)
@@ -65,6 +65,26 @@ int main() try
 		vv.resize(8);
 		DUMP(v)
 		DUMP(vv)
+	}
+
+	{ BLOCK("push_back() v, vv(5)")
+		vector v, vv(5);
+		DUMP(v);
+		DUMP(vv);
+
+		cout << "\n----- 1.0, 2.0\n\n";
+
+		v.push_back(1.0);		// case: sz_ == cap_
+		vv.push_back(2.0);
+		DUMP(v);
+		DUMP(vv);
+
+		cout << "\n----- 1.5, 2.5\n\n";
+
+		v.push_back(1.5);		// case: sz_ < cap_
+		vv.push_back(2.5);
+		DUMP(v);
+		DUMP(vv);
 	}
 }
 catch (const bad_alloc& x) {
