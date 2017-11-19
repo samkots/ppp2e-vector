@@ -30,15 +30,10 @@ inline void dump_name(const std::string& var)
 
 // dump size & capacity
 
-inline void dump_sz_cap(const vector& v) {
+template <typename T>
+inline void dump_sz_cap(const vector<T>& v) {
 	std::cout << '(' << v.size() << ", " << v.capacity() << ')';
 };
-
-// TOTO: remove
-//inline void dump_sz_cap(const std::string& varname, const vector& v) {
-//	std::cout << varname;
-//	dump_sz_cap(v);
-//};
 
 #define DUMP_SZ_CAP(var) \
 	dump_name(#var); \
@@ -47,23 +42,19 @@ inline void dump_sz_cap(const vector& v) {
 
 // dump elements
 
-void dump_elements(const vector& v)
+template <typename T>
+void dump_elements(const vector<T>& v)
 {
 	using namespace std;
 
 	cout << "{ ";
-	for (vector::size_type i = 0; i < v.size(); ++i) {
+	for (typename vector<T>::size_type i = 0; i < v.size(); ++i) {
 		cout << v[i];
 		if (i != v.size() - 1)
 			cout << ", ";
 	}
 	cout << " }";
 }
-
-//void dump_elements(const std::string& varname, const vector& v) {
-//	std::cout << varname;
-//	dump_elements(v);
-//}
 
 #define DUMP_ELEMENTS(var) \
 	dump_name(#var); \
@@ -78,6 +69,40 @@ void dump_elements(const vector& v)
 	cout << ' '; \
 	dump_elements(var); \
 	std::cout << '\n';
+
+
+struct box {
+	int val;
+
+	explicit box (int v)
+		:val{v}
+	{
+		std::cout << "box opened " << v << '\n';
+	}
+
+	box(const box& o): val {o.val}
+	{
+		std::cout << "box copied " << val << '\n';
+	}
+
+	box& operator = (const box& o)
+	{
+		std::cout << "box: " << val << " = " << o.val << '\n';
+		if (this == &o) return *this;
+		val = o.val;
+		return *this;
+	}
+
+	~box () {
+		std::cout << "box closed " << val << '\n';
+	}
+};
+
+std::ostream& operator << (std::ostream& os, const box& b)
+{
+	return os << b.val;
+}
+
 
 } // namespace sam
 
