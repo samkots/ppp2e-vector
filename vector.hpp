@@ -50,6 +50,8 @@ public:
 	vector& operator = (const vector&);				// FIXME: not `const vector<T, A>&` ??
 
 	vector(vector&& o) :alloc_{o.alloc_}, sz_{o.sz_}, cap_{o.cap_}, elem_{o.elem_} {
+		// FIXME: not `const vector<T, A>&` ??
+
 		o.sz_ = o.cap_ = 0;
 		o.elem_ = nullptr;
 	}
@@ -172,7 +174,7 @@ void vector<T, A>::resize(size_type sz, const value_type& val)
 {
 	reserve(sz);
 	for (size_type i = sz_; i < sz; ++i)
-		alloc_.construct(&elem_[i], val);					// TODO: deprecated in C++17
+		alloc_.construct(&elem_[i], val);		// TODO: deprecated in C++17
 	sz_ = sz;
 }
 
@@ -185,7 +187,7 @@ template <typename T, typename A>
 void vector<T, A>::push_back(value_type val)
 {
 	if (cap_ == 0)
-		reserve(8);			// start with 8 "slots"
+		reserve(8);					// start with 8 "slots"
 	else if (sz_ == cap_)
 		reserve(sz_ * 2);
 
