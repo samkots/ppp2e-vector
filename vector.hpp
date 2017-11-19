@@ -11,7 +11,8 @@ namespace sam
 
 class vector {
 public:
-	using size_type = unsigned;
+	using value_type	= double;
+	using size_type		= unsigned;
 
 public:
 	vector() : sz_{0}, cap_{0}, elem_{nullptr} {}
@@ -19,7 +20,7 @@ public:
 	vector(size_type sz)
 		:sz_{sz}
 		,cap_{sz}
-		,elem_{ new double[sz]{} } {}
+		,elem_{ new value_type[sz]{} } {}
 
 	~vector() {
 		delete[] elem_;
@@ -28,7 +29,7 @@ public:
 	vector(const vector& o)
 		:sz_{o.sz_}
 		,cap_{o.cap_}
-		,elem_{new double[sz_]}
+		,elem_{new value_type[sz_]}
 	{
 		for (size_type i = 0; i < sz_; ++i)
 			elem_[i] = o.elem_[i];
@@ -44,20 +45,20 @@ public:
 	vector& operator = (vector&& o);
 
 public:
-	double& operator[] (size_type i) {
+	value_type& operator[] (size_type i) {
 		return elem_[i];
 	}
 
-	const double& operator[] (size_type i) const {
+	const value_type& operator[] (size_type i) const {
 		return elem_[i];
 	}
 
-	double& at(size_type i) {
+	value_type& at(size_type i) {
 		if (i < 0 || sz_ <= i) throw std::bad_alloc{};
 		return elem_[i];
 	}
 
-	const double& at(size_type i) const {
+	const value_type& at(size_type i) const {
 		if (i < 0 || sz_ <= i) throw std::bad_alloc{};
 		return elem_[i];
 	}
@@ -67,12 +68,12 @@ public:
 
 	void reserve(size_type sz);
 	void resize(size_type sz);
-	void push_back(double val);
+	void push_back(value_type val);
 
 private:
-	size_type	sz_;
-	size_type	cap_;
-	double*		elem_;
+	size_type		sz_;
+	size_type		cap_;
+	value_type*		elem_;
 };
 
 ///
@@ -89,7 +90,7 @@ vector& vector::operator = (const vector& o)
 		return *this;
 	}
 
-	double* p = new double[o.sz_];
+	value_type* p = new value_type[o.sz_];
 	for (size_type i = 0; i < o.sz_; ++i)
 		p[i] = o.elem_[i];
 
@@ -121,7 +122,7 @@ void vector::reserve(size_type cap)
 {
 	if (cap <= cap_) return;
 
-	double* p = new double[cap];
+	value_type* p = new value_type[cap];
 	for (size_type i = 0; i < sz_; ++i) p[i] = elem_[i];
 	delete[] elem_;
 
@@ -138,16 +139,19 @@ void vector::reserve(size_type cap)
 // sz_ < sz <= cap_
 // cap_ < sz
 //
+// Kudos to Stroustrup for this brilliant code..! It handles all four cases
+// in three lines without explicite `if` statements !!
+//
 void vector::resize(size_type sz)
 {
 	reserve(sz);
-	for (size_type i = sz_; i < sz; ++i) elem_[i] = double{};
+	for (size_type i = sz_; i < sz; ++i) elem_[i] = value_type{};
 	sz_ = sz;
 }
 
 ///
 
-void vector::push_back(double value)
+void vector::push_back(value_type value)
 {
 	if (cap_ == 0)
 		reserve(8);			// start with 8 "slots"
