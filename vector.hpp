@@ -139,7 +139,7 @@ vector<T, A>& vector<T, A>::operator = (vector&& o) {
 
 //
 // exception unsafe code
-// TODO: fix it
+// XXX: fix it
 //
 template <typename T, typename A>
 void vector<T, A>::reserve(size_type cap)
@@ -167,7 +167,7 @@ void vector<T, A>::reserve(size_type cap)
 // Kudos to Stroustrup for this brilliant code..! It handles all four cases
 // in three lines without explicit `if` statements !!
 //
-// TODO: check for exception safety
+// XXX: check for exception safety
 //
 template <typename T, typename A>
 void vector<T, A>::resize(size_type sz, const value_type& val)
