@@ -91,13 +91,7 @@ int main() try
 
 	// generalized vector test cases...
 
-	{ BLOCK("<double, long, box>")
-		vector<double> vd;
-		DUMP(vd);
-
-		vector<long> vl(4);
-		DUMP(vl);
-
+	{ BLOCK("<box>")
 		vector<box> vb;
 		DUMP(vb);
 		vb.push_back(box{2});
@@ -106,8 +100,8 @@ int main() try
 		DUMP(vb);
 
 		vector<box> vb2;
+		DUMP(vb2);
 		vb2 = vb;
-		DUMP(vb);
 		DUMP(vb2);
 	}
 
