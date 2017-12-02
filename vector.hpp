@@ -99,18 +99,20 @@ vector<T, A>& vector<T, A>::operator = (const vector& o)
 	if (this == &o) return *this;
 
 	if (o.sz_ <= cap_) {
+		for (size_type i = 0; i < sz_; ++i)
+			alloc_.destroy(&elem_[i]);
 		for (size_type i = 0; i < o.sz_; ++i)
-			elem_[i] = o.elem_[i];
+			alloc_.construct(&elem_[i], o.elem_[i]);	// XXX: what if alloc_.construct() throws??
 
 		sz_ = o.sz_;
 		return *this;
 	}
 
-	value_type* p = new value_type[o.sz_];
-	for (size_type i = 0; i < o.sz_; ++i)
-		p[i] = o.elem_[i];
+	value_type* p = alloc_.allocate(o.sz_);
+	for (size_type i = 0; i < o.sz_; ++i) alloc_.construct(&p[i], o.elem_[i]);
 
-	delete[] elem_;
+	for (size_type i = 0; i < sz_; ++i) alloc_.destroy(&elem_[i]);
+	alloc_.deallocate(elem_, cap_);
 	elem_ = p;
 
 	alloc_ = o.alloc_;
@@ -126,7 +128,8 @@ vector<T, A>& vector<T, A>::operator = (vector&& o) {
 	sz_ = o.sz_;
 	cap_ = o.cap_;
 
-	delete[] elem_;
+	for (size_type i = 0; i < sz_; ++i) alloc_.destroy(&elem_[i]);
+	alloc_.deallocate(&elem_, cap_);
 	elem_ = o.elem_;
 
 	o.sz_ = o.cap_ = 0;

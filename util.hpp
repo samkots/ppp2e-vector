@@ -73,30 +73,33 @@ void dump_elements(const vector<T>& v)
 
 struct box {
 	int val;
+	static unsigned count;
 
 	explicit box (int v)
 		:val{v}
 	{
-		std::cout << "box opened " << v << '\n';
+		++count;
 	}
 
 	box(const box& o): val {o.val}
 	{
-		std::cout << "box copied " << val << '\n';
+		++count;
 	}
 
 	box& operator = (const box& o)
 	{
-		std::cout << "box: " << val << " = " << o.val << '\n';
+		++count;
 		if (this == &o) return *this;
 		val = o.val;
 		return *this;
 	}
 
 	~box () {
-		std::cout << "box closed " << val << '\n';
+		--count;
 	}
 };
+
+unsigned box::count{0};
 
 std::ostream& operator << (std::ostream& os, const box& b)
 {

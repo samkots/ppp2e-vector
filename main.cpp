@@ -99,11 +99,19 @@ int main() try
 		DUMP(vl);
 
 		vector<box> vb;
+		DUMP(vb);
 		vb.push_back(box{2});
 		vb.push_back(box{4});
 		vb.push_back(box{8});
 		DUMP(vb);
+
+		vector<box> vb2;
+		vb2 = vb;
+		DUMP(vb);
+		DUMP(vb2);
 	}
+
+	cout << "raii count: " << box::count << '\n';
 }
 catch (const bad_alloc& x) {
 	cerr << "error: " << x.what() << '\n';
