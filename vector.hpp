@@ -11,10 +11,6 @@
 // TODO: allocator_type::construct()  deprecated in C++17
 // TODO: allocator_type::destroy()  deprecated in C++17
 //
-// FIXME: for non-default-constructible classes, value argument for resize() is
-// needed even for 0 size... Looks bad no? :/
-// example: vb.resize(0, box{0});
-//
 
 namespace sam
 {
