@@ -192,7 +192,7 @@ void vector<T, A>::reserve(size_type cap)
 // cap_ < sz
 //
 // Kudos to Stroustrup for this brilliant code..! It handles all four cases
-// in three lines without explicit `if` statements !!
+// in few lines without explicit `if` statements !!
 //
 template <typename T, typename A>
 void vector<T, A>::resize(size_type sz, const value_type& val)
