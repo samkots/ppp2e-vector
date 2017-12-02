@@ -124,13 +124,14 @@ vector<T, A>& vector<T, A>::operator = (const vector& o)
 
 template <typename T, typename A>
 vector<T, A>& vector<T, A>::operator = (vector&& o) {
+	for (size_type i = 0; i < sz_; ++i)
+		alloc_.destroy(&elem_[i]);
+	alloc_.deallocate(&elem_, cap_);
+
+	elem_ = o.elem_;
 	alloc_ = o.alloc_;
 	sz_ = o.sz_;
 	cap_ = o.cap_;
-
-	for (size_type i = 0; i < sz_; ++i) alloc_.destroy(&elem_[i]);
-	alloc_.deallocate(&elem_, cap_);
-	elem_ = o.elem_;
 
 	o.sz_ = o.cap_ = 0;
 	o.elem_ = nullptr;
