@@ -103,6 +103,8 @@ int main() try
 		DUMP(vb2);
 		vb2 = vb;
 		DUMP(vb2);
+
+		vb.resize(0, box{0});
 	}
 
 	cout << "raii count: " << box::count << '\n';

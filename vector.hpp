@@ -7,6 +7,14 @@
 #include <utility>
 #include <stdexcept>
 
+//
+// TODO: allocator_type::construct()  deprecated in C++17
+// TODO: allocator_type::destroy()  deprecated in C++17
+//
+// FIXME: for non-default-constructible classes, value argument for resize() is
+// needed even for 0 size... Looks bad no? :/
+// example: vb.resize(0, box{0});
+//
 
 namespace sam
 {
@@ -53,47 +61,36 @@ public:
 public:
 	vector(const allocator_type& alloc = std::allocator<value_type>{})
 		:vector_base<T, A>{alloc, 0} {}
-		//:alloc_{alloc}, sz_{0}, cap_{0}, elem_{nullptr} {}	// FIXME: delete
 
 	vector(size_type sz, const value_type& val = value_type{}, const allocator_type& alloc = std::allocator<value_type>{})
 		:vector_base<T, A>{alloc, sz}
-		//:alloc_{alloc}		// FIXME: delete
-		//,sz_{sz}
-		//,cap_{sz_}
-		//,elem_{ alloc_.allocate(sz_) }
 	{
 		for (size_type i = 0; i < this->sz_; ++i)
-			this->alloc_.construct(&this->elem_[i], val);	// TODO: deprecated in C++17
+			this->alloc_.construct(&this->elem_[i], val);
 	}
 
 	~vector() {
 		for (size_type i = 0; i < this->sz_; ++i)
-			this->alloc_.destroy(&this->elem_[i]);		// TODO:: deprecated in C++17
-		//alloc_.deallocate(elem_, cap_);		// FIXME: delete
+			this->alloc_.destroy(&this->elem_[i]);
 	}
 
 	vector(const vector& o)					// TODO: not `const vector<T, A>&`.. class name insertion?
 		:vector_base<T, A>{o.alloc_, o.sz_}
-		//,alloc_{o.alloc_}		// FIXME: delete
-		//,sz_{o.sz_}
-		//,cap_{o.cap_}			// FIXME: copy o.sz_ not cap_ ?
-		//,elem_{ alloc_.allocate(sz_) }
 	{
 		for (size_type i = 0; i < this->sz_; ++i)
-			this->alloc_.construct(&this->elem_[i], o.elem_[i]);	// TODO: deprecated in C++17
+			this->alloc_.construct(&this->elem_[i], o.elem_[i]);
 	}
 
-	vector& operator = (const vector&);				// FIXME: not `const vector<T, A>&` ??
+	vector& operator = (const vector&);			// TODO: not `const vector<T, A>&`.. class name insertion?
 
 	vector(vector&& o)
 		:vector_base<T, A>{o.alloc_, o.sz_, o.cap_, o.elem_}
-		//alloc_{o.alloc_}, sz_{o.sz_}, cap_{o.cap_}, elem_{o.elem_} // FIXME: delete
 	{
 		o.sz_ = o.cap_ = 0;
 		o.elem_ = nullptr;
 	}
 
-	vector& operator = (vector&& o);				// FIXME: not `const vector<T, A>&` ??
+	vector& operator = (vector&& o);			// TODO: not `const vector<T, A>&`.. class name insertion?
 
 public:
 	value_type& operator[] (size_type i) {
@@ -120,12 +117,6 @@ public:
 	void reserve(size_type sz);
 	void resize(size_type sz, const value_type& val);
 	void push_back(value_type val);
-
-//private:						// FIXME: delete
-	//allocator_type		alloc_;
-	//size_type		sz_;
-	//size_type		cap_;
-	//value_type*		elem_;
 };
 
 ///
@@ -174,22 +165,19 @@ vector<T, A>& vector<T, A>::operator = (vector&& o)
 
 ///
 
-//
-// exception unsafe code
-// XXX: fix it
-//
 template <typename T, typename A>
 void vector<T, A>::reserve(size_type cap)
 {
 	if (cap <= this->cap_) return;
 
-	//vector_base<T, A> vb{this->alloc_, cap};				// XXX FIXME: shouldn't the sz_ remain unchanged?
+	//vector_base<T, A> vb{this->alloc_, cap};				// XXX FIXME: this will increase sz_ upto cap_
 	vector_base<T, A> vb{this->alloc_, this->sz_, cap};
 
 	for (size_type i = 0; i < this->sz_; ++i)
-		this->alloc_.construct(&vb.elem_[i], this->elem_[i]);		// TODO: deprecated in C++17
+		this->alloc_.construct(&vb.elem_[i], this->elem_[i]);
+
 	for (size_type i = 0; i < this->sz_; ++i)
-		this->alloc_.destroy(&this->elem_[i]);				// TODO: deprecated in C++17
+		this->alloc_.destroy(&this->elem_[i]);
 
 	std::swap<vector_base<T, A>>(*this, vb);
 }
@@ -206,14 +194,14 @@ void vector<T, A>::reserve(size_type cap)
 // Kudos to Stroustrup for this brilliant code..! It handles all four cases
 // in three lines without explicit `if` statements !!
 //
-// XXX: check for exception safety
-//
 template <typename T, typename A>
 void vector<T, A>::resize(size_type sz, const value_type& val)
 {
 	reserve(sz);
 	for (size_type i = this->sz_; i < sz; ++i)
-		this->alloc_.construct(&this->elem_[i], val);		// TODO: deprecated in C++17
+		this->alloc_.construct(&this->elem_[i], val);
+	for (size_type i = sz; i < this->sz_; ++i)
+		this->alloc_.destroy(&this->elem_[i]);
 	this->sz_ = sz;
 }
 
