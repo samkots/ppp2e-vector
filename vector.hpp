@@ -166,11 +166,8 @@ void vector<T, A>::reserve(size_type cap)
 {
 	if (cap <= this->cap_) return;
 
-	//vector_base<T, A> vb{this->alloc_, cap};				// XXX FIXME: this will increase sz_ upto cap_
 	vector_base<T, A> vb{this->alloc_, this->sz_, cap};
-
-	for (size_type i = 0; i < this->sz_; ++i)
-		this->alloc_.construct(&vb.elem_[i], this->elem_[i]);
+	std::uninitialized_copy(this->elem_, &this->elem_[this->sz_], vb.elem_);
 
 	for (size_type i = 0; i < this->sz_; ++i)
 		this->alloc_.destroy(&this->elem_[i]);
